@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"material-icon-theme.files.associations": {
+			"**.ts": "nestjs",
+			"**.spec.ts": "jest",
+			"main.ts": "node"
+		},
+		"workbench.iconTheme": "material-icon-theme"
+	}
+}

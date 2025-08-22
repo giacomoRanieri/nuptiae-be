@@ -1,0 +1,7 @@
+{
+    "material-icon-theme.files.associations": {
+        "*.*.ts": "nestjs",
+        "*.spec.ts": "jest",
+    },
+    "workbench.iconTheme": "material-icon-theme"
+}
