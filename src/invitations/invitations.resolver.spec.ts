@@ -3,6 +3,7 @@ import { InvitationsResolver } from './invitations.resolver';
 import { Invitation } from './entities/invitation.entity';
 import { getModelToken } from '@nestjs/mongoose';
 import { InvitationsService } from './invitations.service';
+import { JwtService } from '@nestjs/jwt';
 
 describe('InvitationsResolver', () => {
   let resolver: InvitationsResolver;
@@ -12,6 +13,7 @@ describe('InvitationsResolver', () => {
       providers: [
         InvitationsResolver,
         InvitationsService,
+        JwtService,
         { provide: getModelToken(Invitation.name), useValue: jest.fn() },
       ],
     }).compile();

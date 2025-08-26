@@ -1,9 +1,12 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { InvitationsModule } from './invitations/invitations.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -23,8 +26,22 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       autoSchemaFile: true,
       // per Fastify, è necessario aggiungere il campo `path`
       path: '/graphql',
+      graphiql: true,
+      playground: false,
+    }),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      global: true,
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('AUTH_SECRET_KEY'),
+      }),
     }),
     InvitationsModule,
+    AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).exclude('graphql').forRoutes('*');
+  }
+}
