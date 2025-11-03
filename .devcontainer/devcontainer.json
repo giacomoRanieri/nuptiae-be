@@ -42,16 +42,16 @@
   },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  "forwardPorts": [3000, 27017],
+  "forwardPorts": [3001, 27017],
   "portsAttributes": {
-    "3000": {
+    "3001": {
       "label": "nuptiae-service"
     }
   },
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "pnpm install" //,
-  // gh codespace ports visibility 3000:public -c $CODESPACE_NAME
+  // gh codespace ports visibility 3001:public -c $CODESPACE_NAME
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
