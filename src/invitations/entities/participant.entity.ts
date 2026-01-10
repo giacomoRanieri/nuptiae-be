@@ -30,9 +30,9 @@ export class Participant {
   @Prop({ type: String, enum: Age, required: true })
   age: Age;
 
-  @Field(() => [String])
-  @Prop({ type: [String], default: [] })
-  intolerances: string[];
+  @Field(() => String)
+  @Prop({ type: String, default: '' })
+  intolerances: string;
 
   @Field()
   @Prop({ default: false })
