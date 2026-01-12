@@ -31,10 +31,16 @@ export class AuthService {
       this.configService.getOrThrow<string>('ADMIN_PASSWORD');
   }
 
-  async signIn(invitationId: string): Promise<{ access_token: string }> {
+  async signIn(
+    invitationId: string,
+    token: string,
+  ): Promise<{ access_token: string }> {
     try {
       const inv: Invitation =
         await this.invitationsService.findOne(invitationId);
+      if (inv.secret !== token) {
+        throw new UnauthorizedException();
+      }
       const payload: Token = { sub: inv._id.toString(), roles: [Role.User] };
       return {
         access_token: await this.jwtService.signAsync(payload, {

@@ -1,10 +1,18 @@
-import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ID,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import {
   CreateInvitationInput,
   UpdateInvitationInput,
   UpdateInvitationParticipantsInput,
 } from './dto/invitation.input';
-import { Invitation } from './entities/invitation.entity';
+import { InvitationDto } from './dto/invitation.dto';
 import { InvitationsService } from './invitations.service';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
@@ -13,50 +21,92 @@ import { Roles } from '../auth/decorators/role.decorator';
 import { GqlHttpExceptionFilter } from '../filters/gql-http-exception.filter';
 import { GqlRolesGuard } from '../auth/guards/gql-roles.guard';
 import { GqlVisibilityGuard } from 'src/auth/guards/gql-visibility.guard';
+import { Invitation } from './entities/invitation.entity';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/auth/entities/user.entity';
 
-@Resolver(() => Invitation)
+const toDto = (invitation: Invitation): InvitationDto => {
+  return {
+    _id: invitation._id.toHexString(),
+    secret: invitation.secret,
+    recipient: invitation.recipient,
+    confirmationStatus: invitation.confirmationStatus,
+    email: invitation.email,
+    phoneNumber: invitation.phoneNumber,
+    contactPersonId: invitation.contactPersonId
+      ? invitation.contactPersonId.toHexString()
+      : null,
+    isInterestedInAccommodation: invitation.isInterestedInAccommodation,
+    participants: invitation.participants.map((participant) => ({
+      _id: participant._id.toHexString(),
+      name: participant.name,
+      lastName: participant.lastName,
+      age: participant.age,
+      intolerances: participant.intolerances,
+      celiac: participant.celiac,
+      vegetarian: participant.vegetarian,
+      vegan: participant.vegan,
+    })),
+  };
+};
+
+@Resolver(() => InvitationDto)
 @UseGuards(GqlAuthGuard, GqlRolesGuard)
 @UseFilters(GqlHttpExceptionFilter)
 export class InvitationsResolver {
   constructor(private readonly invitationService: InvitationsService) {}
 
-  @Mutation(() => Invitation)
+  @Mutation(() => InvitationDto)
   @Roles(Role.Admin)
-  createInvitation(
+  async createInvitation(
     @Args('input') input: CreateInvitationInput,
-  ): Promise<Invitation> {
-    return this.invitationService.create(input);
+  ): Promise<InvitationDto> {
+    const invitation = await this.invitationService.create(input);
+    return toDto(invitation);
   }
 
-  @Mutation(() => Invitation)
+  @Query(() => [InvitationDto])
+  @Roles(Role.Admin)
+  async invitations(): Promise<InvitationDto[]> {
+    const invitations = await this.invitationService.findAll();
+    return invitations.map(toDto);
+  }
+
+  @ResolveField('secret', () => String, { nullable: true })
+  getSecret(@Parent() invitation: InvitationDto, @CurrentUser() user: User) {
+    if (user.roles.includes(Role.Admin)) {
+      return invitation.secret;
+    }
+    return null;
+  }
+
+  @Mutation(() => InvitationDto)
   @UseGuards(GqlVisibilityGuard)
-  updateInvitation(
+  async updateInvitation(
     @Args('id', { type: () => ID, nullable: true }) id: string,
     @Args('input') input: UpdateInvitationInput,
-  ): Promise<Invitation> {
-    return this.invitationService.update(id, input);
+  ): Promise<InvitationDto> {
+    const invitation = await this.invitationService.update(id, input);
+    return toDto(invitation);
   }
 
-  @Mutation(() => Invitation)
+  @Mutation(() => InvitationDto)
   @UseGuards(GqlVisibilityGuard)
-  updateInvitationParticipants(
+  async updateInvitationParticipants(
     @Args('id', { type: () => ID, nullable: true }) id: string,
     @Args('input') input: UpdateInvitationParticipantsInput,
-  ): Promise<Invitation> {
-    return this.invitationService.updateInvitationParticipants(id, input);
+  ): Promise<InvitationDto> {
+    const invitation =
+      await this.invitationService.updateInvitationParticipants(id, input);
+    return toDto(invitation);
   }
 
-  @Query(() => Invitation, { nullable: true })
+  @Query(() => InvitationDto, { nullable: true })
   @UseGuards(GqlVisibilityGuard)
-  invitation(
+  async invitation(
     @Args('id', { type: () => ID, nullable: true }) id: string,
-  ): Promise<Invitation> {
-    return this.invitationService.findOne(id);
-  }
-
-  @Query(() => [Invitation])
-  @Roles(Role.Admin)
-  invitations(): Promise<Invitation[]> {
-    return this.invitationService.findAll();
+  ): Promise<InvitationDto> {
+    const invitation = await this.invitationService.findOne(id);
+    return toDto(invitation);
   }
 }

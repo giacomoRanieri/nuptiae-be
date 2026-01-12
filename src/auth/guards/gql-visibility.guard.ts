@@ -9,7 +9,6 @@ import {
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { FastifyRequest } from 'fastify';
 import { Role } from '../entities/role.enum';
-import { GraphQLError } from 'graphql';
 import { ValidationError } from '@nestjs/apollo';
 
 @Injectable()

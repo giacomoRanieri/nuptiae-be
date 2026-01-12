@@ -22,12 +22,16 @@ export class AuthController {
   @HttpCode(200)
   async login(
     @Body('id') id: string,
+    @Body('token') token: string,
     @Res({ passthrough: true }) res: FastifyReply,
   ) {
     if (!id) {
       throw new UnauthorizedException('Missing invitation id');
     }
-    const { access_token } = await this.authService.signIn(id);
+    if (!token) {
+      throw new UnauthorizedException('Missing invitation token');
+    }
+    const { access_token } = await this.authService.signIn(id, token);
 
     // Set JWT in HTTP-only cookie, expires in 15 minutes
     res.header(

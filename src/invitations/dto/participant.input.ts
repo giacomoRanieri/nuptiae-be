@@ -28,7 +28,7 @@ export class ParticipantInput {
   age: Age;
 
   @IsArray()
-  @Field(() => String, { nullable: 'itemsAndList', defaultValue: '' })
+  @Field(() => String, { nullable: true, defaultValue: '' })
   intolerances: string;
 
   @IsBoolean()

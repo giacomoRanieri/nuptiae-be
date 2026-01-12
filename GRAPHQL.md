@@ -1,6 +1,6 @@
 # GraphQL Invitation API Example Inputs
 
-> This document contains example GraphQL queries and mutations for the Invitation API, based on the current resolver and input definitions.  
+> This document contains example GraphQL queries and mutations for the Invitation API, based on the current resolver and input definitions.
 > Use these examples to test or integrate with the API.
 
 ---
@@ -9,9 +9,7 @@
 
 ```graphql
 mutation {
-  createInvitation(input: {
-    recipient: "Famiglia Ranieri Frontino"
-  }) {
+  createInvitation(input: { recipient: "Famiglia Ranieri Frontino" }) {
     _id
     recipient
   }
@@ -25,7 +23,7 @@ mutation {
 ```graphql
 mutation {
   updateInvitation(
-    id: "68a739fdf64dd848ca61856d",
+    id: "68a739fdf64dd848ca61856d"
     input: {
       recipient: "Famiglia Ranieri Frontino"
       confirmationStatus: CONFIRMED
@@ -51,23 +49,23 @@ mutation {
 ```graphql
 mutation {
   updateInvitationParticipants(
-    id: "68a739fdf64dd848ca61856d",
+    id: "68a739fdf64dd848ca61856d"
     input: {
       participants: [
         {
           name: "Giacomo"
           lastName: "Ranieri"
           age: ADULT
-          intolerances: []
+          intolerances: ""
           celiac: false
           vegetarian: false
           vegan: false
-        },
+        }
         {
           name: "Loredana"
           lastName: "Frontino"
           age: ADULT
-          intolerances: []
+          intolerances: ""
           celiac: false
           vegetarian: false
           vegan: false
