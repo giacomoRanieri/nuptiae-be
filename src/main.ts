@@ -5,7 +5,9 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ConsoleLogger } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import fastifyCookie from '@fastify/cookie';
+import * as fs from 'fs';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter();
@@ -16,6 +18,16 @@ async function bootstrap() {
     fastifyAdapter,
     { logger: new ConsoleLogger({ colors: false, prefix: 'Nuptiae' }) },
   );
+
+  const config = new DocumentBuilder()
+    .setTitle('Nuptiae API')
+    .setDescription('The Nuptiae API description')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  //SwaggerModule.setup('api', app, document);
+  fs.writeFileSync('./swagger-spec.json', JSON.stringify(document, null, 2));
+
   await app.listen(3001);
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises

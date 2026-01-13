@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: true,
+      autoSchemaFile: join(process.cwd(), './schema.gql'),
       // per Fastify, è necessario aggiungere il campo `path`
       path: '/graphql',
       graphiql: true,
