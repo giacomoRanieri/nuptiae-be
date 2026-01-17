@@ -8,6 +8,7 @@ import { ConsoleLogger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import fastifyCookie from '@fastify/cookie';
 import * as fs from 'fs';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const fastifyAdapter = new FastifyAdapter();
@@ -18,6 +19,7 @@ async function bootstrap() {
     fastifyAdapter,
     { logger: new ConsoleLogger({ colors: false, prefix: 'Nuptiae' }) },
   );
+  const configService = app.get(ConfigService);
 
   const config = new DocumentBuilder()
     .setTitle('Nuptiae API')
@@ -26,7 +28,10 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   //SwaggerModule.setup('api', app, document);
-  fs.writeFileSync('./swagger-spec.json', JSON.stringify(document, null, 2));
+  fs.writeFileSync(
+    configService.get<string>('swagger.spec', './swagger-spec.json'),
+    JSON.stringify(document, null, 2),
+  );
 
   await app.listen(3001);
 }
