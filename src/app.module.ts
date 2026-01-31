@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { join } from 'path';
+import { HealthModule } from './health/health.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -48,6 +49,7 @@ import configuration from './config/configuration';
     }),
     InvitationsModule,
     AuthModule,
+    HealthModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import type { FastifyReply } from 'fastify';
-import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
+import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { AdminLoginDto } from './dto/admin-login.dto';

@@ -1,37 +1,6 @@
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Age } from '../entities/participant.entity';
 import { ConfirmationStatus } from '../entities/invitation.entity';
-
-registerEnumType(Age, {
-  name: 'Age',
-});
-
-@ObjectType()
-export class ParticipantDto {
-  @Field(() => ID)
-  _id: string;
-
-  @Field()
-  name: string;
-
-  @Field()
-  lastName: string;
-
-  @Field(() => Age)
-  age: Age;
-
-  @Field(() => String)
-  intolerances: string;
-
-  @Field()
-  celiac: boolean;
-
-  @Field()
-  vegetarian: boolean;
-
-  @Field()
-  vegan: boolean;
-}
+import { ParticipantDto } from './participant.dto';
 
 registerEnumType(ConfirmationStatus, {
   name: 'ConfirmationStatus',

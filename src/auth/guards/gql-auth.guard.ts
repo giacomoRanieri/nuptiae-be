@@ -10,7 +10,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { InvitationsService } from '../../invitations/invitations.service';
 import { FastifyRequest } from 'fastify';
 import { JwtService } from '@nestjs/jwt';
-import { Token } from 'src/auth/entities/token.entity';
+import { Token } from '../entities/token.entity';
 import { User } from '../entities/user.entity';
 import { Role } from '../entities/role.enum';
 

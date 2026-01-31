@@ -20,10 +20,10 @@ import { Role } from '../auth/entities/role.enum';
 import { Roles } from '../auth/decorators/role.decorator';
 import { GqlHttpExceptionFilter } from '../filters/gql-http-exception.filter';
 import { GqlRolesGuard } from '../auth/guards/gql-roles.guard';
-import { GqlVisibilityGuard } from 'src/auth/guards/gql-visibility.guard';
+import { GqlVisibilityGuard } from '../auth/guards/gql-visibility.guard';
 import { Invitation } from './entities/invitation.entity';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { User } from 'src/auth/entities/user.entity';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { User } from '../auth/entities/user.entity';
 
 const toDto = (invitation: Invitation): InvitationDto => {
   return {
