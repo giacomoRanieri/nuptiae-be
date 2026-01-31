@@ -27,3 +27,4 @@ lerna-debug.log*
 
 **/*.gql
 swagger-spec.json
+schema.json
